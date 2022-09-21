@@ -1,4 +1,4 @@
-# Prevent Navigation
+# Alphabetize GA4 Event Parameters
 
 This bookmarklet can be run within the GTM UI in order to reorder your event parameters alphabetically.
 
