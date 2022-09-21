@@ -7,6 +7,7 @@ This bookmarklet can be run within the GTM UI in order to reorder your event par
 (() => {
   const paramRows = document.querySelectorAll('[diff-field^="tag.data.vendorTemplate.param.eventParameters.listItem"]');
   const nameAttributeBase = 'tag.data.vendorTemplate.param.eventParameters';
+  const e = new Event("change");
 
   const values = Array.from(paramRows).map((paramRow, index) => {
     const key = paramRow.querySelector(`[name="${nameAttributeBase}.${index}.name"] input`).value;
@@ -21,13 +22,18 @@ This bookmarklet can be run within the GTM UI in order to reorder your event par
   });
 
   values.forEach(({key, value}, index) => {
-    document.querySelector(`[name="${nameAttributeBase}.${index}.name"] input`).value = key;
-    document.querySelector(`[name="${nameAttributeBase}.${index}.value"] input`).value = value;
+    const keyInput = document.querySelector(`[name="${nameAttributeBase}.${index}.name"] input`)
+    keyInput.value = key;
+    keyInput.dispatchEvent(e);
+    
+    const valueInput = document.querySelector(`[name="${nameAttributeBase}.${index}.value"] input`);
+    valueInput.value = value;
+    valueInput.dispatchEvent(e);
   })
 })();
 ```
 
 ## Bookmarklet
 ```js
-javascript:(()=>{const paramRows=document.querySelectorAll('[diff-field^="tag.data.vendorTemplate.param.eventParameters.listItem"]'),nameAttributeBase="tag.data.vendorTemplate.param.eventParameters",values=Array.from(paramRows).map(((e,a)=>({key:e.querySelector(`[name="${nameAttributeBase}.${a}.name"] input`).value,value:e.querySelector(`[name="${nameAttributeBase}.${a}.value"] input`).value})));values.sort((function(e,a){return e.key<a.key?-1:e.key>a.key?1:0})),values.forEach((({key:e,value:a},t)=>{document.querySelector(`[name="${nameAttributeBase}.${t}.name"] input`).value=e,document.querySelector(`[name="${nameAttributeBase}.${t}.value"] input`).value=a}))})();
+javascript:(()=>{const e=document.querySelectorAll('[diff-field^="tag.data.vendorTemplate.param.eventParameters.listItem"]'),a="tag.data.vendorTemplate.param.eventParameters",t=new Event("change"),n=Array.from(e).map(((e,t)=>({key:e.querySelector(`[name="${a}.${t}.name"] input`).value,value:e.querySelector(`[name="${a}.${t}.value"] input`).value})));n.sort((function(e,a){return e.key<a.key?-1:e.key>a.key?1:0})),n.forEach((({key:e,value:n},r)=>{const u=document.querySelector(`[name="${a}.${r}.name"] input`);u.value=e,u.dispatchEvent(t);const l=document.querySelector(`[name="${a}.${r}.value"] input`);l.value=n,l.dispatchEvent(t)}))})();
 ```
