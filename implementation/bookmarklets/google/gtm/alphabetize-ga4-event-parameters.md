@@ -5,6 +5,7 @@ This bookmarklet can be run within the GTM UI in order to reorder your event par
 ## Source
 ```js
 (() => {
+  // Get current parameters
   const paramRows = document.querySelectorAll('[diff-field^="tag.data.vendorTemplate.param.eventParameters.listItem"]');
   const nameAttributeBase = 'tag.data.vendorTemplate.param.eventParameters';
   const e = new Event("change");
@@ -15,12 +16,10 @@ This bookmarklet can be run within the GTM UI in order to reorder your event par
     return {key, value};
   });
 
-  values.sort(function(a, b) {
-    if (a.key < b.key) return -1;
-    if (a.key > b.key) return 1;
-    return 0;
-  });
+  // Do the actual sorting
+  values.sort((a, b) => a.key.localeCompare(b.key));
 
+  // To make the updates in GTM, we need to both set the values in the inputs and then fire a "change" event so that GTM will notice the changes and persist them
   values.forEach(({key, value}, index) => {
     const keyInput = document.querySelector(`[name="${nameAttributeBase}.${index}.name"] input`)
     keyInput.value = key;
@@ -35,5 +34,5 @@ This bookmarklet can be run within the GTM UI in order to reorder your event par
 
 ## Bookmarklet
 ```js
-javascript:(()=>{const e=document.querySelectorAll('[diff-field^="tag.data.vendorTemplate.param.eventParameters.listItem"]'),a="tag.data.vendorTemplate.param.eventParameters",t=new Event("change"),n=Array.from(e).map(((e,t)=>({key:e.querySelector(`[name="${a}.${t}.name"] input`).value,value:e.querySelector(`[name="${a}.${t}.value"] input`).value})));n.sort((function(e,a){return e.key<a.key?-1:e.key>a.key?1:0})),n.forEach((({key:e,value:n},r)=>{const u=document.querySelector(`[name="${a}.${r}.name"] input`);u.value=e,u.dispatchEvent(t);const l=document.querySelector(`[name="${a}.${r}.value"] input`);l.value=n,l.dispatchEvent(t)}))})();
+javascript:(()=>{const e=document.querySelectorAll('[diff-field^="tag.data.vendorTemplate.param.eventParameters.listItem"]'),a="tag.data.vendorTemplate.param.eventParameters",t=new Event("change"),n=Array.from(e).map(((e,t)=>({key:e.querySelector(`[name="${a}.${t}.name"] input`).value,value:e.querySelector(`[name="${a}.${t}.value"] input`).value})));n.sort((a, b) => a.key.localeCompare(b.key)),n.forEach((({key:e,value:n},r)=>{const u=document.querySelector(`[name="${a}.${r}.name"] input`);u.value=e,u.dispatchEvent(t);const l=document.querySelector(`[name="${a}.${r}.value"] input`);l.value=n,l.dispatchEvent(t)}))})();
 ```
